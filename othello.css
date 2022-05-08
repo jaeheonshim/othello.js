@@ -1,0 +1,71 @@
+div[class^="othello"] {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; 
+}
+
+.othello-cell {
+    display: flex;
+    border: 1px solid black;
+}
+
+.othello-dark {
+    background-color: #228C22;
+}
+
+.othello-light {
+    background-color: #1da81d;
+}
+
+.othello-piece {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition-property: transform;
+    transition-duration: 0.15s;
+
+    transform: scale(0);
+}
+
+.othello-black-side, .othello-white-side {
+    width: 90%;
+    height: 90%;
+
+    transform-origin: center;
+
+    border-radius: 50%;
+    border-width: 3px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0);
+
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+
+    left: 5%;
+    top: 5%;
+
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.othello-black-side {
+    background-image: linear-gradient(#3a3a3a, #111);
+    border-color: #000;
+
+    transform: rotateY(180deg);
+}
+
+.othello-white-side { 
+    background-image: linear-gradient(#aaa, #eee);
+    border-color: #bababa;
+}
+
+.othello-white, .othello-black {
+    transform: scale(1);
+}
+
+.othello-black {
+    transform: rotateY(180deg);
+}
