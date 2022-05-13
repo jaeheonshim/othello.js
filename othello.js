@@ -166,39 +166,24 @@ const EMPTY = Symbol("empty");
                 piece.appendChild(whiteSide);
 
                 col.appendChild(piece);
+                $(col).click(() => onClick(i, j));
 
                 row.appendChild(col);
             }
 
             element.append(row);
-
-            addPiece(4, 4, WHITE);
         }
 
         state.subscribe(onBoardUpdate);
         onBoardUpdate(state.board);
 
         return {
-            addPiece: addPiece,
             setPiece: setPiece
         }
     }
 
-    function addPiece(row, col, color) {
-        if (row >= 8 || row < 0 || col >= 8 || col < 0) {
-            console.error("addPiece: row/col out of bounds");
-            return;
-        }
-
-        const rowElement = element.children().eq(row);
-        const cell = rowElement.children().eq(col);
-        const piece = cell.find(".othello-piece");
-
-        if (color == BLACK) {
-            piece.addClass("othello-black");
-        } else {
-            piece.addClass("othello-white");
-        }
+    function onClick(row, col) {
+        
     }
 
     function setPiece(row, col, color) {
