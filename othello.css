@@ -21,9 +21,10 @@ div[class^="othello"] {
     position: relative;
     width: 100%;
     height: 100%;
+
     transform-style: preserve-3d;
     transition-property: transform;
-    transition-duration: 0.15s;
+    transition-duration: 0.1s;
 
     transform: scale(0);
 }
@@ -62,10 +63,10 @@ div[class^="othello"] {
     border-color: #bababa;
 }
 
-.othello-white, .othello-black {
+.othello-white {
     transform: scale(1);
 }
 
 .othello-black {
-    transform: rotateY(180deg);
+    transform: scale(1) rotateY(180deg);
 }

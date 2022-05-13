@@ -214,17 +214,39 @@ const EMPTY = Symbol("empty");
         piece.removeClass("othello-black");
         piece.removeClass("othello-white");
 
+        const pieceWhiteSide = piece.find(".othello-white-side");
+        pieceWhiteSide.hide();
+
         if (color == BLACK) {
             piece.addClass("othello-black");
         } else if (color == WHITE) {
             piece.addClass("othello-white");
         }
+        
+        setTimeout(() => pieceWhiteSide.show(), 15);
+    }
+
+    function getPiece(row, col) {
+        if (row >= 8 || row < 0 || col >= 8 || col < 0) {
+            console.error("getPiece: row/col out of bounds");
+            return;
+        }
+
+        const rowElement = element.children().eq(row);
+        const cell = rowElement.children().eq(col);
+        const piece = cell.find(".othello-piece");
+
+        if(piece.hasClass("othello-black")) return BLACK;
+        if(piece.hasClass("othello-white")) return WHITE;
+        return EMPTY;
     }
 
     function onBoardUpdate(board) {
         for(let row = 0; row < board.length; row++) {
             for(let col = 0; col < board[row].length; col++) {
-                setPiece(row, col, board[row][col]);
+                if(board[row][col] != EMPTY && board[row][col] != getPiece(row, col)) {
+                    setPiece(row, col, board[row][col]);
+                }
             }
         }
     }
