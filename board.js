@@ -46,7 +46,6 @@
             element.append(row);
         }
 
-        state.subscribe(onBoardUpdate);
         onBoardUpdate(state.board);
 
         return {
@@ -55,7 +54,9 @@
     }
 
     function onClick(row, col) {
+        onBoardUpdate(state.board);
         state.place(row, col);
+        onBoardUpdate(state.board);
     }
 
     function setPiece(row, col, color) {

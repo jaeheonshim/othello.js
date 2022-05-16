@@ -8,20 +8,19 @@ function Othello() {
         else if (color == BLACK) return WHITE;
         else return EMPTY;
     }
+
+    function COORD_TO_RC(coord) {
+        coord = coord.trim().toUpperCase();
+        const row = parseInt(coord.charAt(1)) - 1;
+        const col = coord.charCodeAt(0) - 'A'.charCodeAt(0);
+        return {
+            row: row,
+            col: col
+        };
+    }
     
     this.board = new Array(8).fill(EMPTY).map(e => new Array(8).fill(EMPTY));
     this.turn = BLACK;
-    const handlers = [];
-
-    this.subscribe = function(listener) {
-        handlers.push(listener);
-    }
-
-    this.fire = function(data) {
-        for(let handler of handlers) {
-            handler(data);
-        }
-    }
 
     this.printBoard = function () {
         console.log("  0 1 2 3 4 5 6 7");
@@ -69,58 +68,88 @@ function Othello() {
         }
     }
 
-    this._checkCanPlace = function(x, y, dx, dy, color) {
+    this._checkCanPlace = function(row, col, drow, dcol, color) {
         let cX, cY;
-        cX = x + dx;
-        cY = y + dy;
+        cX = row + drow;
+        cY = col + dcol;
 
         while(cY >= 0 && cY < 8 && cX >= 0 && cX < 8) {
             if(this.board[cX][cY] == EMPTY) break;
             if(this.board[cX][cY] == color) {
-                if(Math.abs(y - cY) > 1 || Math.abs(x - cX) > 1) {
+                if(Math.abs(col - cY) > 1 || Math.abs(row - cX) > 1) {
                     return true;
                 } else {
                     break;
                 }
             }
 
-            cX += dx;
-            cY += dy;
+            cX += drow;
+            cY += dcol;
         }
 
         return false;
     }
 
-    this.canPlace = function(x, y, color) {
-        if (this.board[x][y] != EMPTY) return false;
+    this.canPlace = function(row, col, color) {
+        if(!color) {
+            color = col;
+            const rc = COORD_TO_RC(row);
+            row = rc.row;
+            col = rc.col;
+        }
+
+        if (this.board[row][col] != EMPTY) return false;
         
-        return this._checkCanPlace(x, y, -1, 0, color) || 
-            this._checkCanPlace(x, y, 1, 0, color) || 
-            this._checkCanPlace(x, y, 0, 1, color) ||
-            this._checkCanPlace(x, y, 0, -1, color) ||
-            this._checkCanPlace(x, y, 1, 1, color) ||
-            this._checkCanPlace(x, y, -1, 1, color) ||
-            this._checkCanPlace(x, y, -1, -1, color) ||
-            this._checkCanPlace(x, y, 1, -1, color);
+        return this._checkCanPlace(row, col, -1, 0, color) || 
+            this._checkCanPlace(row, col, 1, 0, color) || 
+            this._checkCanPlace(row, col, 0, 1, color) ||
+            this._checkCanPlace(row, col, 0, -1, color) ||
+            this._checkCanPlace(row, col, 1, 1, color) ||
+            this._checkCanPlace(row, col, -1, 1, color) ||
+            this._checkCanPlace(row, col, -1, -1, color) ||
+            this._checkCanPlace(row, col, 1, -1, color);
     }
 
-    this.place = function (x, y) {
-        if(!this.canPlace(x, y, this.turn)) return;
+    this.place = function (row, col) {
+        if(!col) {
+            const rc = COORD_TO_RC(row);
+            row = rc.row;
+            col = rc.col;
+        }
 
-        this.board[x][y] = this.turn;
-        this.flipBetween(x, y, 1, 0);
-        this.flipBetween(x, y, -1, 0);
-        this.flipBetween(x, y, 0, 1);
-        this.flipBetween(x, y, 0, -1);
-        this.flipBetween(x, y, 1, 1);
-        this.flipBetween(x, y, -1, 1);
-        this.flipBetween(x, y, -1, -1);
-        this.flipBetween(x, y, 1, -1);
+        if(!this.canPlace(row, col, this.turn)) return;
 
-        this.fire(this.board);
-        this.turn = OPPOSITE(this.turn);
+        this.board[row][col] = this.turn;
+        this.flipBetween(row, col, 1, 0);
+        this.flipBetween(row, col, -1, 0);
+        this.flipBetween(row, col, 0, 1);
+        this.flipBetween(row, col, 0, -1);
+        this.flipBetween(row, col, 1, 1);
+        this.flipBetween(row, col, -1, 1);
+        this.flipBetween(row, col, -1, -1);
+        this.flipBetween(row, col, 1, -1);
+
+        if(this.getValidMoves(OPPOSITE(this.turn)).length > 0) {
+            this.turn = OPPOSITE(this.turn);
+        }
+    }
+
+    this.getValidMoves = function(color) {
+        const validMoves = [];
+
+        for(let row = 0; row < 8; row++) {
+            for(let col = 0; col < 8; col++) {
+                if(this.canPlace(row, col, color)) {
+                    validMoves.push({
+                        row: row,
+                        col: col
+                    });
+                }
+            }
+        }
+
+        return validMoves;
     }
 
     this.initialPosition();
-    this.fire(this.board);
 };
