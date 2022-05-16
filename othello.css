@@ -24,7 +24,7 @@ div[class^="othello"] {
 
     transform-style: preserve-3d;
     transition-property: transform;
-    transition-duration: 0.1s;
+    transition-duration: 0.08s;
 
     transform: scale(0);
 }

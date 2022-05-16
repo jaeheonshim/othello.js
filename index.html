@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="othello.js"></script>
+    <script src="board.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="othello.css">
     <title>Document</title>
@@ -13,6 +14,12 @@
     <div id="othello" style="width: 30%"></div>
     <script>
         const board = Othello("othello");
+
+        // preset start pos
+        board.setPiece(3, 3, WHITE);
+        board.setPiece(3, 4, BLACK);
+        board.setPiece(4, 3, BLACK);
+        board.setPiece(4, 4, WHITE);
     </script>
 </body>
 </html>
