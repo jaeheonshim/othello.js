@@ -47,7 +47,7 @@ function Othello() {
         this.board[4][4] = WHITE;
     };
 
-    this.flipBetween = function(row, col, drow, dcol) {
+    this._flipBetween = function(row, col, drow, dcol) {
         const originalColor = this.board[row][col];
 
         if(originalColor == EMPTY) return;
@@ -111,7 +111,7 @@ function Othello() {
     }
 
     this.place = function (row, col) {
-        if(!col) {
+        if(col == undefined) {
             const rc = COORD_TO_RC(row);
             row = rc.row;
             col = rc.col;
@@ -120,14 +120,14 @@ function Othello() {
         if(!this.canPlace(row, col, this.turn)) return;
 
         this.board[row][col] = this.turn;
-        this.flipBetween(row, col, 1, 0);
-        this.flipBetween(row, col, -1, 0);
-        this.flipBetween(row, col, 0, 1);
-        this.flipBetween(row, col, 0, -1);
-        this.flipBetween(row, col, 1, 1);
-        this.flipBetween(row, col, -1, 1);
-        this.flipBetween(row, col, -1, -1);
-        this.flipBetween(row, col, 1, -1);
+        this._flipBetween(row, col, 1, 0);
+        this._flipBetween(row, col, -1, 0);
+        this._flipBetween(row, col, 0, 1);
+        this._flipBetween(row, col, 0, -1);
+        this._flipBetween(row, col, 1, 1);
+        this._flipBetween(row, col, -1, 1);
+        this._flipBetween(row, col, -1, -1);
+        this._flipBetween(row, col, 1, -1);
 
         if(this.getValidMoves(OPPOSITE(this.turn)).length > 0) {
             this.turn = OPPOSITE(this.turn);

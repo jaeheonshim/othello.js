@@ -54,7 +54,6 @@
     }
 
     function onClick(row, col) {
-        onBoardUpdate(state.board);
         state.place(row, col);
         onBoardUpdate(state.board);
     }
