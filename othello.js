@@ -19,17 +19,17 @@ function Othello() {
         };
     }
     
-    this.board = new Array(8).fill(EMPTY).map(e => new Array(8).fill(EMPTY));
-    this.turn = BLACK;
+    const board = new Array(8).fill(EMPTY).map(e => new Array(8).fill(EMPTY));
+    let turn = BLACK;
 
-    this.printBoard = function () {
+    function printBoard() {
         console.log("  0 1 2 3 4 5 6 7");
-        for (let i = 0; i < this.board.length; i++) {
+        for (let i = 0; i < board.length; i++) {
             const line = [i];
-            for (let j = 0; j < this.board[i].length; j++) {
-                if (this.board[i][j] == WHITE) {
+            for (let j = 0; j < board[i].length; j++) {
+                if (board[i][j] == WHITE) {
                     line.push("O");
-                } else if (this.board[i][j] == BLACK) {
+                } else if (board[i][j] == BLACK) {
                     line.push("X");
                 } else {
                     line.push("-");
@@ -40,42 +40,42 @@ function Othello() {
         }
     }
 
-    this.initialPosition = function () {
-        this.board[3][3] = WHITE;
-        this.board[3][4] = BLACK;
-        this.board[4][3] = BLACK;
-        this.board[4][4] = WHITE;
+    function initialPosition() {
+        board[3][3] = WHITE;
+        board[3][4] = BLACK;
+        board[4][3] = BLACK;
+        board[4][4] = WHITE;
     };
 
-    this._flipBetween = function(row, col, drow, dcol) {
-        const originalColor = this.board[row][col];
+    function flipBetween(row, col, drow, dcol) {
+        const originalColor = board[row][col];
 
         if(originalColor == EMPTY) return;
 
         let i, j;
-        for(i = row + drow, j = col + dcol; i >= 0 && j >= 0 && i < 8 && j < 8 && this.board[i][j] != EMPTY; i += drow, j += dcol) {
-            if(this.board[i][j] == originalColor) break;
+        for(i = row + drow, j = col + dcol; i >= 0 && j >= 0 && i < 8 && j < 8 && board[i][j] != EMPTY; i += drow, j += dcol) {
+            if(board[i][j] == originalColor) break;
         }
 
-        if(i < 0 || j < 0 || i >= 8 || j >= 8 || this.board[i][j] == EMPTY) return;
+        if(i < 0 || j < 0 || i >= 8 || j >= 8 || board[i][j] == EMPTY) return;
 
         row += drow;
         col += dcol;
-        while(row >= 0 && col >= 0 && row < 8 && col < 8 && this.board[row][col] != originalColor && this.board[row][col] != EMPTY) {
-            this.board[row][col] = originalColor;
+        while(row >= 0 && col >= 0 && row < 8 && col < 8 && board[row][col] != originalColor && board[row][col] != EMPTY) {
+            board[row][col] = originalColor;
             row += drow;
             col += dcol;
         }
     }
 
-    this._checkCanPlace = function(row, col, drow, dcol, color) {
+    function checkCanPlace(row, col, drow, dcol, color) {
         let cX, cY;
         cX = row + drow;
         cY = col + dcol;
 
         while(cY >= 0 && cY < 8 && cX >= 0 && cX < 8) {
-            if(this.board[cX][cY] == EMPTY) break;
-            if(this.board[cX][cY] == color) {
+            if(board[cX][cY] == EMPTY) break;
+            if(board[cX][cY] == color) {
                 if(Math.abs(col - cY) > 1 || Math.abs(row - cX) > 1) {
                     return true;
                 } else {
@@ -90,7 +90,7 @@ function Othello() {
         return false;
     }
 
-    this.canPlace = function(row, col, color) {
+    function canPlace(row, col, color) {
         if(!color) {
             color = col;
             const rc = COORD_TO_RC(row);
@@ -98,48 +98,48 @@ function Othello() {
             col = rc.col;
         }
 
-        if (this.board[row][col] != EMPTY) return false;
+        if (board[row][col] != EMPTY) return false;
         
-        return this._checkCanPlace(row, col, -1, 0, color) || 
-            this._checkCanPlace(row, col, 1, 0, color) || 
-            this._checkCanPlace(row, col, 0, 1, color) ||
-            this._checkCanPlace(row, col, 0, -1, color) ||
-            this._checkCanPlace(row, col, 1, 1, color) ||
-            this._checkCanPlace(row, col, -1, 1, color) ||
-            this._checkCanPlace(row, col, -1, -1, color) ||
-            this._checkCanPlace(row, col, 1, -1, color);
+        return checkCanPlace(row, col, -1, 0, color) || 
+            checkCanPlace(row, col, 1, 0, color) || 
+            checkCanPlace(row, col, 0, 1, color) ||
+            checkCanPlace(row, col, 0, -1, color) ||
+            checkCanPlace(row, col, 1, 1, color) ||
+            checkCanPlace(row, col, -1, 1, color) ||
+            checkCanPlace(row, col, -1, -1, color) ||
+            checkCanPlace(row, col, 1, -1, color);
     }
 
-    this.place = function (row, col) {
+    function place(row, col) {
         if(col == undefined) {
             const rc = COORD_TO_RC(row);
             row = rc.row;
             col = rc.col;
         }
 
-        if(!this.canPlace(row, col, this.turn)) return;
+        if(!canPlace(row, col, turn)) return;
 
-        this.board[row][col] = this.turn;
-        this._flipBetween(row, col, 1, 0);
-        this._flipBetween(row, col, -1, 0);
-        this._flipBetween(row, col, 0, 1);
-        this._flipBetween(row, col, 0, -1);
-        this._flipBetween(row, col, 1, 1);
-        this._flipBetween(row, col, -1, 1);
-        this._flipBetween(row, col, -1, -1);
-        this._flipBetween(row, col, 1, -1);
+        board[row][col] = turn;
+        flipBetween(row, col, 1, 0);
+        flipBetween(row, col, -1, 0);
+        flipBetween(row, col, 0, 1);
+        flipBetween(row, col, 0, -1);
+        flipBetween(row, col, 1, 1);
+        flipBetween(row, col, -1, 1);
+        flipBetween(row, col, -1, -1);
+        flipBetween(row, col, 1, -1);
 
-        if(this.getValidMoves(OPPOSITE(this.turn)).length > 0) {
-            this.turn = OPPOSITE(this.turn);
+        if(getValidMoves(OPPOSITE(turn)).length > 0) {
+            turn = OPPOSITE(turn);
         }
     }
 
-    this.getValidMoves = function(color) {
+    function getValidMoves(color) {
         const validMoves = [];
 
         for(let row = 0; row < 8; row++) {
             for(let col = 0; col < 8; col++) {
-                if(this.canPlace(row, col, color)) {
+                if(canPlace(row, col, color)) {
                     validMoves.push({
                         row: row,
                         col: col
@@ -151,5 +151,10 @@ function Othello() {
         return validMoves;
     }
 
-    this.initialPosition();
+    initialPosition();
+
+    return {
+        board: board,
+        place: place
+    }
 };
