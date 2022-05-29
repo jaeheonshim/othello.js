@@ -91,7 +91,7 @@ function Othello() {
     }
 
     function canPlace(row, col, color) {
-        if(!color) {
+        if(color == undefined) {
             color = col;
             const rc = COORD_TO_RC(row);
             row = rc.row;
@@ -135,6 +135,8 @@ function Othello() {
     }
 
     function getValidMoves(color) {
+        if(color == undefined) color = turn;
+        
         const validMoves = [];
 
         for(let row = 0; row < 8; row++) {
@@ -155,6 +157,7 @@ function Othello() {
 
     return {
         board: board,
-        place: place
+        place: place,
+        getValidMoves: getValidMoves
     }
 };

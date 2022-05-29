@@ -29,6 +29,11 @@
                 const piece = document.createElement("div");
                 piece.classList.add("othello-piece");
 
+                const validMove = document.createElement("div");
+                validMove.classList.add("othello-validmove");
+
+                $(validMove).hide();
+
                 const blackSide = document.createElement("div");
                 blackSide.classList.add("othello-black-side");
                 piece.appendChild(blackSide);
@@ -38,6 +43,7 @@
                 piece.appendChild(whiteSide);
 
                 col.appendChild(piece);
+                col.appendChild(validMove);
                 $(col).click(() => onClick(i, j));
 
                 row.appendChild(col);
@@ -56,6 +62,23 @@
     function onClick(row, col) {
         state.place(row, col);
         onBoardUpdate(state.board);
+    }
+
+    function setValidMove(row, col, show) {
+        if (row >= 8 || row < 0 || col >= 8 || col < 0) {
+            console.error("setValidMove: row/col out of bounds");
+            return;
+        }
+
+        const rowElement = element.children().eq(row);
+        const cell = rowElement.children().eq(col);
+        const validMove = cell.find(".othello-validmove");
+
+        if(show) {
+            validMove.show();
+        } else {
+            validMove.hide();
+        }
     }
 
     function setPiece(row, col, color) {
@@ -101,12 +124,18 @@
     function onBoardUpdate(board) {
         for(let row = 0; row < board.length; row++) {
             for(let col = 0; col < board[row].length; col++) {
+                setValidMove(row, col, false);
                 if(board[row][col] != EMPTY && board[row][col] != getPiece(row, col)) {
                     setPiece(row, col, board[row][col]);
                 }
             }
         }
+
+        for(const validMove of state.getValidMoves()) {
+            setValidMove(validMove.row, validMove.col, true);
+        }
     }
 
+    window["setValidMove"] = setValidMove;
     window["Othello"] = constructor;
 })();

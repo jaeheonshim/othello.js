@@ -7,6 +7,7 @@ div[class^="othello"] {
 .othello-cell {
     display: flex;
     border: 1px solid black;
+    position: relative;
 }
 
 .othello-dark {
@@ -27,6 +28,19 @@ div[class^="othello"] {
     transition-duration: 0.08s;
 
     transform: scale(0);
+}
+
+.othello-validmove {
+    position: absolute;
+    width: 85%;
+    height: 85%;
+
+    top: 7.5%;
+    left: 7.5%;
+
+    border: 0.6em solid rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
 }
 
 .othello-black-side, .othello-white-side {
@@ -69,4 +83,9 @@ div[class^="othello"] {
 
 .othello-black {
     transform: scale(1) rotateY(180deg);
+}
+
+.othello-placeable {
+    transform: scale(1);
+    opacity: 0.3;
 }
